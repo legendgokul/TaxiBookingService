@@ -29,7 +29,6 @@ public class TaxiService
         travelPoints.Add(new Point("F", 75));
     }
 
-
     public Taxi FindAvailableTaxi(Point pickupPoint, int bookingTime)
     {
 
@@ -58,6 +57,7 @@ public class TaxiService
         }
         return new Taxi();
     }
+
     public Boolean BookTaxi(string pickupPoint, string dropPoint, int bookingTime, int custID)
     {
         try
@@ -91,14 +91,17 @@ public class TaxiService
         }
         return true;
     }
+
     public List<Taxi> GetAllTaxis()
     {
         return taxis;
     }
+
     public List<Booking> GetBookingHistory()
     {
         return bookingHistory;
     }
+
     public List<Booking> GetBookingHistory(int taxiId)
     {
         return bookingHistory.Where(x => x.AssignedTaxiID == taxiId).ToList();

@@ -11,32 +11,52 @@ class ProgramStart
         var flag = true;
         while (flag)
         {
-            Console.WriteLine("Select a option to proceed..");
-            Console.WriteLine("1.Request a taxi");
-            Console.WriteLine("2.View Booking History");
-            Console.WriteLine("3.View Taxi Income");
-            Console.WriteLine("4.Exit");
+            Console.WriteLine("Select an option to proceed:");
+            Console.WriteLine("1. Request a taxi");
+            Console.WriteLine("2. View Booking History");
+            Console.WriteLine("3. View Taxi Income");
+            Console.WriteLine("4. Exit");
 
-            var optionSelected = int.Parse(Console.ReadLine());
-            Console.WriteLine($"Selected option :{optionSelected}");
+            if (!int.TryParse(Console.ReadLine(), out int optionSelected) || optionSelected < 1 || optionSelected > 4)
+            {
+                Console.WriteLine("Invalid option selected. Please enter a number between 1 and 4.");
+            }
             switch (optionSelected)
             {
                 case 1:
                     {
                         //methods to request taxi
-                        Console.WriteLine("Customer ID");
-                        int.TryParse(Console.ReadLine(), out int custId);
+                        Console.WriteLine("Enter Customer ID:");
+                        if (!int.TryParse(Console.ReadLine(), out int customerId))
+                        {
+                            Console.WriteLine("Invalid Customer ID. Please enter a valid number.");
+                            return;
+                        }
 
-                        Console.WriteLine("Pickup Point");
-                        var pickpoint = Console.ReadLine();
+                        Console.WriteLine("Enter Pickup Point:");
+                        string pickupPoint = Console.ReadLine();
+                        if (string.IsNullOrWhiteSpace(pickupPoint))
+                        {
+                            Console.WriteLine("Pickup Point cannot be empty.");
+                            return;
+                        }
 
-                        Console.WriteLine("Drop Point");
-                        var droppoint = Console.ReadLine();
+                        Console.WriteLine("Enter Drop Point:");
+                        string dropPoint = Console.ReadLine();
+                        if (string.IsNullOrWhiteSpace(dropPoint))
+                        {
+                            Console.WriteLine("Drop Point cannot be empty.");
+                            return;
+                        }
 
-                        Console.WriteLine("Pickup Time");
-                        int.TryParse(Console.ReadLine(), out int pickuptime);
+                        Console.WriteLine("Enter Pickup Time (in numeric format 0 - 24):");
+                        if (!int.TryParse(Console.ReadLine(), out int pickupTime) || pickupTime < 0 || pickupTime > 24)
+                        {
+                            Console.WriteLine("Invalid Pickup Time. Please enter a valid time in 24-hour format (e.g., 1330 for 1:30 PM).");
+                            return;
+                        }
 
-                        service.BookTaxi(pickpoint, droppoint, pickuptime, custId);
+                        service.BookTaxi(pickupPoint, dropPoint, pickupTime, customerId);
                         break;
                     }
                 case 2:
@@ -44,11 +64,18 @@ class ProgramStart
                         //method to view booking history
                         Console.WriteLine("Booking History");
                         var bookingHistory = service.GetBookingHistory();
-                        Console.WriteLine("BookingID    CustomerID    From    To    PickupTime    DropTime    Amount");
+                        // Print header
+                        Console.WriteLine("{0,-12} {1,-12} {2,-20} {3,-20} {4,-20} {5,-20} {6,-10}",
+                            "BookingID", "CustomerID", "From", "To", "PickupTime", "DropTime", "Amount");
+
+                        // Print entries
                         foreach (var entry in bookingHistory)
                         {
-                            Console.WriteLine($"{entry.BookingId} : {entry.CustomerId} : {entry.PickupPoint.Name} : {entry.DropPoint.Name} : {entry.pickupTime} :{entry.dropTime} : {entry.Fare} ");
+                            Console.WriteLine("{0,-12} {1,-12} {2,-20} {3,-20} {4,-20} {5,-20} {6,-10}",
+                                entry.BookingId, entry.CustomerId, entry.PickupPoint.Name, entry.DropPoint.Name,
+                                entry.pickupTime, entry.dropTime, entry.Fare);
                         }
+
                         break;
                     }
                 case 3:
@@ -57,10 +84,15 @@ class ProgramStart
                         Console.WriteLine("Provide taxiID:");
                         int.TryParse(Console.ReadLine(), out int custId);
                         var bookingHistory = service.GetBookingHistory(custId);
-                        Console.WriteLine("BookingID    CustomerID    From    To    PickupTime    DropTime    Amount");
+                        Console.WriteLine("{0,-12} {1,-12} {2,-20} {3,-20} {4,-20} {5,-20} {6,-10}",
+                                "BookingID", "CustomerID", "From", "To", "PickupTime", "DropTime", "Amount");
+
+                        // Print entries
                         foreach (var entry in bookingHistory)
                         {
-                            Console.WriteLine($"{entry.BookingId} : {entry.CustomerId} : {entry.PickupPoint.Name} : {entry.DropPoint.Name} : {entry.pickupTime} :{entry.dropTime} : {entry.Fare} ");
+                            Console.WriteLine("{0,-12} {1,-12} {2,-20} {3,-20} {4,-20} {5,-20} {6,-10}",
+                                entry.BookingId, entry.CustomerId, entry.PickupPoint.Name, entry.DropPoint.Name,
+                                entry.pickupTime, entry.dropTime, entry.Fare);
                         }
                         break;
                     }
@@ -77,30 +109,6 @@ class ProgramStart
             }
         }
     }
-
-    /*
-    public BookingDetail getBookingDetail()
-    {
-        BookingDetail BD = new BookingDetail();
-        
-        BD.bookingId = bookingList.Count+1;
-            
-        Console.WriteLine("Customer ID :");
-        BD.CustomerId = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("Pickup Point :");
-        BD.FromLoc = Console.ReadLine();
-
-        Console.WriteLine("Drop Point :");
-        BD.ToLoc = Console.ReadLine();
-
-        Console.WriteLine("Pickup Time :");
-        BD.pickupTime = int.Parse(Console.ReadLine());
-
-        //calculate amount and dropTime depending on available taxi.
-    }
-    */
-
 }
 
 
